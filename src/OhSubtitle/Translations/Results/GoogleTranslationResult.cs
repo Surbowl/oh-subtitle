@@ -31,7 +31,7 @@ namespace OhSubtitle.Translations.Results
                 StringBuilder sb = new StringBuilder();
                 foreach (var sentence in Sentences)
                 {
-                    sb.Append(sentence.Trans == null ? " " : sentence.Trans);
+                    sb.Append(sentence.Trans ?? " ");
                 }
                 return sb.ToString();
             }

@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="860" Height="80" Title="OhSubtitle"
+        Width="860" Height="65" Title="OhSubtitle"
         Topmost="True" WindowStartupLocation="CenterScreen"
         WindowStyle="None" Background="Black"
         AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
@@ -28,5 +28,7 @@
         </ScrollViewer>
         <fa:ImageAwesome x:Name="imgClose" Icon="WindowClose" Margin="0,2,2,0" Height="14" Width="14" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
                          MouseDown="imgClose_MouseDown" Cursor="Hand"/>
+        <fa:ImageAwesome x:Name="imgEye" Icon="Eye" Margin="0,0,2,0" Height="14" Width="14" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
+                         MouseEnter="imgEye_MouseEnter" MouseLeave="imgEye_MouseLeave"  Cursor="Hand"/>
     </Grid>
 </Window>

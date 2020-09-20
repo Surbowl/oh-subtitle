@@ -27,7 +27,7 @@ namespace OhSubtitle
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                this.DragMove();
+                DragMove();
             }
         }
 
@@ -44,6 +44,16 @@ namespace OhSubtitle
             txtInput.Text = string.Empty;
             txtResult.Text = string.Empty;
             imgReset.Visibility = Visibility.Visible;
+        }
+
+        private void imgEye_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Opacity = 0.1;
+        }
+
+        private void imgEye_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Opacity = 1;
         }
 
         private void imgClose_MouseDown(object sender, MouseButtonEventArgs e)

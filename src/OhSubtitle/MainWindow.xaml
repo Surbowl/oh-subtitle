@@ -2,10 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="860" Height="80"
-        Title="OhSubtitle"
-        Topmost="True"
-        WindowStartupLocation="CenterScreen"
+        Width="860" Height="80" Title="OhSubtitle"
+        Topmost="True" WindowStartupLocation="CenterScreen"
         WindowStyle="None" Background="Black"
         AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         MouseDown="Window_MouseDown">

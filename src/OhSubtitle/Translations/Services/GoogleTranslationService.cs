@@ -2,7 +2,6 @@
 using Flurl.Http;
 using OhSubtitle.Translations.Interfaces;
 using OhSubtitle.Translations.Results;
-using System;
 using System.Threading.Tasks;
 
 namespace OhSubtitle.Translations.Services
@@ -11,21 +10,16 @@ namespace OhSubtitle.Translations.Services
     {
         public async Task<string> TranslateTextAsync(string orig)
         {
+            if (string.IsNullOrWhiteSpace(orig))
+            {
+                return string.Empty;
+            }
             var result = await GetResultAsync(orig);
             return result.Result;
         }
 
-        public string TranslateText(string orig)
-        {
-            return TranslateTextAsync(orig).GetAwaiter().GetResult();
-        }
-
         public async Task<GoogleTranslationResult> GetResultAsync(string orig)
         {
-            if (string.IsNullOrWhiteSpace(orig))
-            {
-                return new GoogleTranslationResult();
-            }
             try
             {
                 var result = await "http://translate.google.cn/translate_a/single"
@@ -58,7 +52,7 @@ namespace OhSubtitle.Translations.Services
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
-                if (c > 127 && !Char.IsPunctuation(c))
+                if (c > 127 && !char.IsPunctuation(c))
                 {
                     return true;
                 }

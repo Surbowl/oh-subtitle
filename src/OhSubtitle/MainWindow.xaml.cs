@@ -38,6 +38,19 @@ namespace OhSubtitle
             _typingTimer.Start();
         }
 
+        private void imgReset_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _typingTimer.Stop();
+            txtInput.Text = string.Empty;
+            txtResult.Text = string.Empty;
+            imgReset.Visibility = Visibility.Visible;
+        }
+
+        private void imgClose_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
         private async void HandleTypingTimerTimeoutAsync(object sender, EventArgs e)
         {
             imgReset.Visibility = Visibility.Hidden;
@@ -54,19 +67,6 @@ namespace OhSubtitle
             {
                 imgReset.Visibility = Visibility.Visible;
             }
-        }
-
-        private void imgReset_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            _typingTimer.Stop();
-            txtInput.Text = string.Empty;
-            txtResult.Text = string.Empty;
-            imgReset.Visibility = Visibility.Visible;
-        }
-
-        private void imgClose_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
 
         private async Task<string> TranslateTextAsync(string orig)

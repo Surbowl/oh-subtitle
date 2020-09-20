@@ -18,7 +18,7 @@ namespace OhSubtitle
         {
             _typingTimer = new DispatcherTimer();
             _typingTimer.Interval = TimeSpan.FromMilliseconds(800);
-            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeout);
+            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync);
             _translationService = new GoogleTranslationService();
             InitializeComponent();
         }
@@ -38,7 +38,7 @@ namespace OhSubtitle
             _typingTimer.Start();
         }
 
-        private async void HandleTypingTimerTimeout(object sender, EventArgs e)
+        private async void HandleTypingTimerTimeoutAsync(object sender, EventArgs e)
         {
             imgReset.Visibility = Visibility.Hidden;
             imgLoading.Visibility = Visibility.Visible;
@@ -47,7 +47,7 @@ namespace OhSubtitle
             {
                 // The timer must be stopped, We want to act only once per keystroke.
                 timer.Stop();
-                txtResult.Text = await TranslateText(txtInput.Text);
+                txtResult.Text = await TranslateTextAsync(txtInput.Text);
             }
             imgLoading.Visibility = Visibility.Hidden;
             if (!string.IsNullOrWhiteSpace(txtResult.Text))
@@ -63,12 +63,13 @@ namespace OhSubtitle
             txtResult.Text = string.Empty;
             imgReset.Visibility = Visibility.Visible;
         }
+
         private void imgClose_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private async Task<string> TranslateText(string orig)
+        private async Task<string> TranslateTextAsync(string orig)
         {
             if (string.IsNullOrWhiteSpace(orig))
             {

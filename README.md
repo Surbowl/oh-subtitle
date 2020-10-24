@@ -4,7 +4,7 @@
 
 
 ## Download
-- [v1.0.2](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.2_win_x86.zip) 
+- [v1.0.2_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.2_win_x86.zip) 
   - 新增透明按钮，鼠标悬浮在按钮上方可使窗体透明化
   - 降低窗体默认高度 80 -> 65
 

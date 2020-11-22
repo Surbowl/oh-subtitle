@@ -35,6 +35,10 @@ namespace OhSubtitle
 
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
 
+        private Thread? _setTopMostThread;
+
+        private bool _isExit = false;
+
         public MainWindow()
         {
             _typingTimer = new DispatcherTimer
@@ -61,15 +65,26 @@ namespace OhSubtitle
         {
             WindowInteropHelper wndHelper = new WindowInteropHelper(this);
             // 创建一个新线程，每过 800ms 就重新将该窗体设为置顶（与视频播放器争夺 TopMost）
-            new Thread(() => {
+            _setTopMostThread = new Thread(() =>
+            {
                 while (true)
                 {
                     Thread.Sleep(800);
-                    Application.Current.Dispatcher.Invoke(() => {
+                    if (_isExit)
+                    {
+                        break;
+                    }
+                    Application.Current?.Dispatcher.Invoke(() =>
+                    {
                         SetWindowPos(wndHelper.Handle, HWND_TOPMOST, 0, 0, 0, 0, 0x0003);
                     });
                 }
-            }).Start();
+            });
+            _setTopMostThread.Start();
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _isExit = true;
         }
 
         private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)

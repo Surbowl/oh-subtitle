@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30404.54
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OhSubtitle", "OhSubtitle\OhSubtitle.csproj", "{7AE7B87F-2648-4CA3-ADA6-D928BB6321F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OhSubtitle", "OhSubtitle.csproj", "{7AE7B87F-2648-4CA3-ADA6-D928BB6321F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

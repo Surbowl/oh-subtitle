@@ -6,7 +6,9 @@
         Topmost="True" WindowStartupLocation="CenterScreen"
         WindowStyle="None" Background="Black"
         AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
-        MouseDown="Window_MouseDown" Loaded="Window_Loaded">
+        MouseDown="Window_MouseDown"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

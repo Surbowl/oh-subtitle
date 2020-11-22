@@ -166,12 +166,13 @@ namespace OhSubtitle
         /// <returns></returns>
         private bool IsAEnglishWord(string str)
         {
+            str = str.Trim();
             if (str.Length > 45)
             {
                 return false;
             }
 
-            return new Regex(@"^([a-zA-Z]|-)+$").Match(str.Trim()).Success;
+            return new Regex(@"^([a-zA-Z]|-)+$").Match(str).Success;
         }
     }
 }

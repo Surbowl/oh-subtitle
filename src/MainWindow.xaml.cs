@@ -141,7 +141,7 @@ namespace OhSubtitle
                 return false;
             }
 
-            return new Regex(@"^([a-zA-Z]|-)+$").Match(str).Success;
+            return new Regex(@"^([a-zA-Z]|-|\.|·|')+$").Match(str).Success;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
+using OhSubtitle.Services.Interfaces;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OhSubtitle.Services.DictionaryYoudao
+namespace OhSubtitle.Services
 {
     /// <summary>
     /// 有道词典

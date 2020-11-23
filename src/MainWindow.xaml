@@ -7,7 +7,8 @@
         WindowStyle="None" Background="Black"
         AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         MouseDown="Window_MouseDown"
-        Deactivated="Window_Deactivated">
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,8 +25,8 @@
                          MouseDown="ImgReset_MouseDown" Cursor="Hand"/>
         <ScrollViewer Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="5,10,5,2">
             <TextBlock x:Name="txtResult" HorizontalAlignment="Stretch"
-                   TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
-                   Foreground="FloralWhite" FontSize="14"/>
+                       TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
+                       Foreground="FloralWhite" FontSize="14"/>
         </ScrollViewer>
         <fa:ImageAwesome x:Name="imgClose" Icon="WindowClose" Margin="0,2,2,0" Width="14" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
                          MouseDown="ImgClose_MouseDown" Cursor="Hand"/>

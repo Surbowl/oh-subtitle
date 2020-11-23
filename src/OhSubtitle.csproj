@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageIcon>icon.png</PackageIcon>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageProjectUrl>https://github.com/Surbowl/Oh-Subtitle</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Surbowl/Oh-Subtitle</RepositoryUrl>
     <Authors>Surbowl</Authors>
-    <Company />
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>https://github.com/Surbowl/Oh-Subtitle</PackageReleaseNotes>
     <SignAssembly>false</SignAssembly>

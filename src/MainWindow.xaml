@@ -27,9 +27,11 @@
                    TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
                    Foreground="FloralWhite" FontSize="14"/>
         </ScrollViewer>
-        <fa:ImageAwesome x:Name="imgClose" Icon="WindowClose" Margin="0,2,2,0" Height="14" Width="14" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
+        <fa:ImageAwesome x:Name="imgClose" Icon="WindowClose" Margin="0,2,2,0" Width="14" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
                          MouseDown="ImgClose_MouseDown" Cursor="Hand"/>
-        <fa:ImageAwesome x:Name="imgEye" Icon="Eye" Margin="0,0,2,0" Height="14" Width="14" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
-                         MouseEnter="ImgEye_MouseEnter" MouseLeave="ImgEye_MouseLeave"  Cursor="Hand"/>
+        <Grid x:Name="gridEye" Grid.Column="3" Background="Transparent" Height="20" Cursor="Hand"
+              MouseEnter="GridEye_MouseEnter" MouseLeave="GridEye_MouseLeave" >
+            <fa:ImageAwesome x:Name="imgEye" Icon="Eye" Margin="0,0,2,0" Width="14" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"/>
+        </Grid
     </Grid>
 </Window>

@@ -72,12 +72,12 @@ namespace OhSubtitle
             imgReset.Visibility = Visibility.Visible;
         }
 
-        private void ImgEye_MouseEnter(object sender, MouseEventArgs e)
+        private void GridEye_MouseEnter(object sender, MouseEventArgs e)
         {
-            Opacity = 0.1;
+            Opacity = 0.15;
         }
 
-        private void ImgEye_MouseLeave(object sender, MouseEventArgs e)
+        private void GridEye_MouseLeave(object sender, MouseEventArgs e)
         {
             Opacity = 1;
         }

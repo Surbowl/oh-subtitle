@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace OhSubtitle.Services
+namespace OhSubtitle.Services.Interfaces
 {
     /// <summary>
     /// 词典服务

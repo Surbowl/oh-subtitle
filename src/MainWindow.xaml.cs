@@ -1,6 +1,5 @@
 ﻿using OhSubtitle.Services;
-using OhSubtitle.Services.DictionaryYoudao;
-using OhSubtitle.Services.TranslationGoogle;
+using OhSubtitle.Services.Interfaces;
 using System;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -30,15 +29,6 @@ namespace OhSubtitle
         /// </summary>
         private readonly IDictionaryService _dictionaryService;
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
-
-        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-
-        private Thread? _setTopMostThread;
-
-        private bool _isExit = false;
-
         public MainWindow()
         {
             _typingTimer = new DispatcherTimer
@@ -61,31 +51,10 @@ namespace OhSubtitle
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Deactivated(object sender, EventArgs e)
         {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
-            // 创建一个新线程，每过 800ms 就重新将该窗体设为置顶（与视频播放器争夺 TopMost）
-            _setTopMostThread = new Thread(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(800);
-                    if (_isExit)
-                    {
-                        break;
-                    }
-                    Application.Current?.Dispatcher.Invoke(() =>
-                    {
-                        SetWindowPos(wndHelper.Handle, HWND_TOPMOST, 0, 0, 0, 0, 0x0003);
-                    });
-                }
-            });
-            _setTopMostThread.Start();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _isExit = true;
+            // https://stackoverflow.com/questions/20050426/wpf-always-on-top
+            ((Window)sender).Topmost = true;
         }
 
         private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)

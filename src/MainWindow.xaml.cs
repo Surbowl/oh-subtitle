@@ -1,4 +1,6 @@
-﻿using OhSubtitle.Services;
+﻿using OhSubtitle.Helpers;
+using OhSubtitle.Helpers.Enums;
+using OhSubtitle.Services;
 using OhSubtitle.Services.Interfaces;
 using System;
 using System.Runtime.InteropServices;
@@ -15,6 +17,16 @@ namespace OhSubtitle
     public partial class MainWindow : Window
     {
         /// <summary>
+        /// 窗体透明时的不透明度
+        /// </summary>
+        const double MinimumOpacity = 0.15d;
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
+
+        private static readonly IntPtr _hwndTopMost = new IntPtr(-1);
+
+        /// <summary>
         /// 结束输入后的计时器
         /// </summary>
         private readonly DispatcherTimer _typingTimer;
@@ -29,13 +41,14 @@ namespace OhSubtitle
         /// </summary>
         private readonly IDictionaryService _dictionaryService;
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
-
-        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-
+        /// <summary>
+        /// 该线程负责周期性地将窗体设为置顶（与视频播放器争夺 TopMost）
+        /// </summary>
         private Thread? _setTopMostThread;
 
+        /// <summary>
+        /// 是否退出
+        /// </summary>
         private bool _isExit = false;
 
         public MainWindow()
@@ -52,16 +65,33 @@ namespace OhSubtitle
             InitializeComponent();
         }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                DragMove();
-            }
-        }
+        /// <summary>
+        /// 窗体
+        /// 加载完毕
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
+            var windowHandle = new WindowInteropHelper(this).Handle;
+
+            // 注册系统快捷键
+            var hotKeyRegistSuccess = HotKeyHelper.TryRegist(windowHandle, HotKeyModifiers.Ctrl, Key.Q, () =>
+            {
+                if (Opacity == 1)
+                {
+                    Opacity = MinimumOpacity;
+                }
+                else
+                {
+                    Opacity = 1;
+                }
+            });
+            if (!hotKeyRegistSuccess)
+            {
+                txtInput.Text = "Ctrl+Q 快捷键已被其他程序占用";
+            }
+
             // 创建一个新线程，每过 800ms 就重新将该窗体设为置顶（与视频播放器争夺 TopMost）
             _setTopMostThread = new Thread(() =>
             {
@@ -74,18 +104,44 @@ namespace OhSubtitle
                     }
                     Application.Current?.Dispatcher.Invoke(() =>
                     {
-                        SetWindowPos(wndHelper.Handle, HWND_TOPMOST, 0, 0, 0, 0, 0x0003);
+                        SetWindowPos(windowHandle, _hwndTopMost, 0, 0, 0, 0, 0x0003);
                     });
                 }
             });
             _setTopMostThread.Start();
         }
 
+        /// <summary>
+        /// 窗体
+        /// 鼠标单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
+        }
+
+        /// <summary>
+        /// 窗体
+        /// 关闭中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _isExit = true;
         }
 
+        /// <summary>
+        /// 文本输入框
+        /// 文本改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Resets the timer
@@ -93,6 +149,12 @@ namespace OhSubtitle
             _typingTimer.Start();
         }
 
+        /// <summary>
+        /// 重置按钮
+        /// 鼠标单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ImgReset_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _typingTimer.Stop();
@@ -101,19 +163,55 @@ namespace OhSubtitle
             imgReset.Visibility = Visibility.Visible;
         }
 
-        private void GridEye_MouseEnter(object sender, MouseEventArgs e)
+        /// <summary>
+        /// 关闭按钮
+        /// 鼠标单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgClose_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Opacity = 0.15;
+            Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// 眼睛按钮
+        /// 鼠标移入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GridEye_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Opacity = MinimumOpacity;
+        }
+
+        /// <summary>
+        /// 眼睛按钮
+        /// 鼠标移出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GridEye_MouseLeave(object sender, MouseEventArgs e)
         {
             Opacity = 1;
         }
 
-        private void ImgClose_MouseDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 快捷键
+        /// 切换窗体不透明度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CommandBinding_SwitchOpacity(object sender, CanExecuteRoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            if (Opacity == 1)
+            {
+                Opacity = MinimumOpacity;
+            }
+            else
+            {
+                Opacity = 1;
+            }
         }
 
         /// <summary>

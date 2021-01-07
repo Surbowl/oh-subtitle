@@ -18,7 +18,7 @@
             <ColumnDefinition Width="18"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="txtInput" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,2" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="2000" TextWrapping="Wrap" Text="Google translation"
+                 TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="2000" TextWrapping="Wrap" Text="在左侧输入要翻译的中文或英文，按 Ctrl+Q 切换不透明度"
                  Background="Black" Foreground="FloralWhite" FontSize="14"
                  TextChanged="TxtInput_TextChanged"/>
         <fa:ImageAwesome x:Name="imgLoading" Icon="Refresh" Spin="True" Height="14" Width="14" Grid.Column="1" Foreground="FloralWhite" Visibility="Hidden"/>

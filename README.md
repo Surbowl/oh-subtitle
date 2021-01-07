@@ -4,14 +4,17 @@
 
 
 ## Download
-- [v1.0.2_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.2_win_x86.zip)
-  - 新增透明按钮，鼠标悬浮在按钮上方可使窗体透明化
-  - 降低窗体默认高度 80 -> 65
+- [v1.0.4_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.4_win_x86.zip)
+  - 添加切换窗体透明度的快捷键 Ctrl+Q
 - [v1.0.3_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.3_win_x86.zip)
   - 增强单词查询功能，输入单个单词时显示更全面的单词释义
   - 解决腾讯视频、优酷视频全屏时无法置顶的问题
-  - 增大透明按钮的触发范围
+  - 扩大透明度切换按钮（眼睛按钮）的鼠标触发范围
   - 隐藏任务栏按钮
+- [v1.0.2_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.2_win_x86.zip)
+  - 新增透明度切换按钮（眼睛按钮），鼠标悬浮在按钮上方可使窗体透明化
+  - 降低窗体默认高度 80 -> 65
+
 
 ## Demonstration
 ![sample](https://github.com/Surbowl/Oh-Subtitle/blob/master/images/sample.gif?raw=true)

@@ -4,12 +4,12 @@ using OhSubtitle.Services;
 using OhSubtitle.Services.Interfaces;
 using System;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace OhSubtitle
@@ -171,6 +171,7 @@ namespace OhSubtitle
         /// <param name="e"></param>
         private void ImgClose_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            _isExit = true;
             Application.Current.Shutdown();
         }
 
@@ -194,6 +195,82 @@ namespace OhSubtitle
         private void GridEye_MouseLeave(object sender, MouseEventArgs e)
         {
             Opacity = 1;
+        }
+
+        /// <summary>
+        /// 右键菜单
+        /// 退出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            _isExit = true;
+            Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// 右键菜单
+        /// 亮白
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuColorWhite_Checked(object sender, RoutedEventArgs e)
+        {
+            menuColorLightGray.IsChecked = false;
+            menuColorDimGray.IsChecked = false;
+            menuColorBlack.IsChecked = false;
+            Background = txtInput.Background = Brushes.White;
+            txtInput.Foreground = txtResult.Foreground = Brushes.Black;
+            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.Black;
+        }
+
+        /// <summary>
+        /// 右键菜单
+        /// 亮灰
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuColorLightGray_Checked(object sender, RoutedEventArgs e)
+        {
+            menuColorWhite.IsChecked = false;
+            menuColorDimGray.IsChecked = false;
+            menuColorBlack.IsChecked = false;
+            Background = txtInput.Background = Brushes.LightGray;
+            txtInput.Foreground = txtResult.Foreground = Brushes.Black;
+            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.Black;
+        }
+
+        /// <summary>
+        /// 右键菜单
+        /// 暗灰
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuColorDimGray_Checked(object sender, RoutedEventArgs e)
+        {
+            menuColorWhite.IsChecked = false;
+            menuColorLightGray.IsChecked = false;
+            menuColorBlack.IsChecked = false;
+            Background = txtInput.Background = Brushes.DimGray;
+            txtInput.Foreground = txtResult.Foreground = Brushes.White;
+            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.White;
+        }
+
+        /// <summary>
+        /// 右键菜单
+        /// 暗黑
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuColorBlack_Checked(object sender, RoutedEventArgs e)
+        {
+            menuColorWhite.IsChecked = false;
+            menuColorDimGray.IsChecked = false;
+            menuColorLightGray.IsChecked = false;
+            Background = txtInput.Background = Brushes.Black;
+            txtInput.Foreground = txtResult.Foreground = Brushes.FloralWhite;
+            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.FloralWhite;
         }
 
         /// <summary>
@@ -233,7 +310,7 @@ namespace OhSubtitle
                 {
                     txtResult.Text = string.Empty;
                 }
-                else if (IsAEnglishWord(txtInput.Text))
+                else if (txtInput.Text.IsAEnglishWord())
                 {
                     var result = await _dictionaryService.QueryAsync(txtInput.Text);
                     if (string.IsNullOrEmpty(result))
@@ -253,22 +330,6 @@ namespace OhSubtitle
             {
                 imgReset.Visibility = Visibility.Visible;
             }
-        }
-
-        /// <summary>
-        /// 判断是否是单个英文单词
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private bool IsAEnglishWord(string str)
-        {
-            str = str.Trim();
-            if (str.Length > 45)
-            {
-                return false;
-            }
-
-            return new Regex(@"^([a-zA-Z]|-|\.|·|')+$").Match(str).Success;
         }
     }
 }

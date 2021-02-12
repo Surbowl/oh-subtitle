@@ -36,4 +36,14 @@
             <fa:ImageAwesome x:Name="imgEye" Icon="Eye" Margin="0,0,2,0" Width="14" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"/>
         </Grid>
     </Grid>
+    <Window.ContextMenu>
+        <ContextMenu Name="menu">
+            <MenuItem Name="menuColorWhite" Header="亮白 White" IsCheckable="True" Checked="MenuColorWhite_Checked"></MenuItem>
+            <MenuItem Name="menuColorLightGray" Header="亮灰 LightGray" IsCheckable="True" Checked="MenuColorLightGray_Checked"></MenuItem>
+            <MenuItem Name="menuColorDimGray" Header="暗灰 DimGray" IsCheckable="True" Checked="MenuColorDimGray_Checked"></MenuItem>
+            <MenuItem Name="menuColorBlack" Header="暗黑 Black" IsCheckable="True" Checked="MenuColorBlack_Checked" IsChecked="True"></MenuItem>
+            <Separator />
+            <MenuItem Name="menuExit" Header="退出 Exit" Click="MenuExit_Click"></MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
 </Window>

@@ -4,6 +4,8 @@
 
 
 ## Download
+- [v1.0.5_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.5_win_x86.zip)
+  - 新增右键菜单，可选亮白、亮灰、暗灰、暗黑四种主题色
 - [v1.0.4_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.4_win_x86.zip)
   - 添加切换窗体透明度的快捷键 Ctrl+Q
 - [v1.0.3_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.3_win_x86.zip)

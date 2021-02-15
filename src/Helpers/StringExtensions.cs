@@ -22,5 +22,28 @@ namespace OhSubtitle.Helpers
 
             return new Regex(@"^([a-zA-Z]|-|\.|·|')+$").Match(str).Success;
         }
+
+        /// <summary>
+        /// 判断是否存在中文字符
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>存在中文字符</returns>
+        public static bool ContainsChineseCharacters(this string str)
+        {
+            if (str == null)
+            {
+                return false;
+            }
+            str = str.Trim();
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+                if (c > 127 && !char.IsPunctuation(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

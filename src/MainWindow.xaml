@@ -38,10 +38,13 @@
     </Grid>
     <Window.ContextMenu>
         <ContextMenu Name="menu">
-            <MenuItem Name="menuColorWhite" Header="亮白 White" IsCheckable="True" Checked="MenuColorWhite_Checked"></MenuItem>
-            <MenuItem Name="menuColorLightGray" Header="亮灰 LightGray" IsCheckable="True" Checked="MenuColorLightGray_Checked"></MenuItem>
-            <MenuItem Name="menuColorDimGray" Header="暗灰 DimGray" IsCheckable="True" Checked="MenuColorDimGray_Checked"></MenuItem>
-            <MenuItem Name="menuColorBlack" Header="暗黑 Black" IsCheckable="True" Checked="MenuColorBlack_Checked" IsChecked="True"></MenuItem>
+            <MenuItem Name="menuModelZhEn" Header="中文 / English" IsCheckable="True" Click="MenuModelZhEn_Click" IsChecked="True"></MenuItem>
+            <MenuItem Name="menuModelZhJp" Header="中文 / 日本語" IsCheckable="True" Click="MenuModelZhJp_Click"></MenuItem>
+            <Separator />
+            <MenuItem Name="menuColorWhite" Header="亮白 White" IsCheckable="True" Click="MenuColorWhite_Click"></MenuItem>
+            <MenuItem Name="menuColorLightGray" Header="亮灰 LightGray" IsCheckable="True" Click="MenuColorLightGray_Click"></MenuItem>
+            <MenuItem Name="menuColorDimGray" Header="暗灰 DimGray" IsCheckable="True" Click="MenuColorDimGray_Click"></MenuItem>
+            <MenuItem Name="menuColorBlack" Header="暗黑 Black" IsCheckable="True" Click="MenuColorBlack_Click" IsChecked="True"></MenuItem>
             <Separator />
             <MenuItem Name="menuExit" Header="退出 Exit" Click="MenuExit_Click"></MenuItem>
         </ContextMenu>

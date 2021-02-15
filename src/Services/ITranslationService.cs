@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace OhSubtitle.Services.Interfaces
+namespace OhSubtitle.Services
 {
     /// <summary>
     /// 翻译服务

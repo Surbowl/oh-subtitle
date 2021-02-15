@@ -1,7 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
-using OhSubtitle.Services.Interfaces;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +8,9 @@ using System.Threading.Tasks;
 namespace OhSubtitle.Services
 {
     /// <summary>
-    /// 有道词典
+    /// 有道英文词典
     /// </summary>
-    public class YoudaoDictionaryService : IDictionaryService
+    public class YoudaoEnglishDictionaryService : IDictionaryService
     {
         /// <summary>
         /// 查询单词，失败时返回 Empty 字符串
@@ -20,7 +19,7 @@ namespace OhSubtitle.Services
         /// <returns></returns>
         public async Task<string> QueryAsync(string word)
         {
-            if(string.IsNullOrWhiteSpace(word) || word.Length > 45)
+            if (string.IsNullOrWhiteSpace(word) || word.Length > 45)
             {
                 return string.Empty;
             }
@@ -85,7 +84,7 @@ namespace OhSubtitle.Services
                 }
             };
 
-            if (sb.Length ==0)
+            if (sb.Length == 0)
             {
                 // Try get Trs from individual token
                 var individualTrs = jToken.SelectTokens("individual.trs[*]");
@@ -145,9 +144,9 @@ namespace OhSubtitle.Services
 
             if (sb.Length > 3)
             {
-                sb.Remove(sb.Length - 1, 1);
-                sb.Replace("第三人称单数", "三单");
-                sb.Replace("名词复数", "复数");
+                sb.Remove(sb.Length - 1, 1)
+                  .Replace("第三人称单数", "三单")
+                  .Replace("名词复数", "复数");
                 return sb.ToString().TrimStart();
             }
             return string.Empty;

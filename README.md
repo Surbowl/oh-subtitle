@@ -4,6 +4,10 @@
 
 
 ## Download
+- [v1.1.0_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.1.0_win_x86.zip)
+  - 添加对日语的支持
+  - 添加笔记本功能
+  - 启动时自动还原上次的位置、大小、主题色和语言模式
 - [v1.0.5_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.5_win_x86.zip)
   - 新增右键菜单，可选亮白、亮灰、暗灰、暗黑四种主题色
 - [v1.0.4_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.0.4_win_x86.zip)

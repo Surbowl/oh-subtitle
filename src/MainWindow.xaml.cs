@@ -1,7 +1,9 @@
-﻿using OhSubtitle.Helpers;
+﻿using OhSubtitle.Enums;
+using OhSubtitle.Helpers;
 using OhSubtitle.Helpers.Enums;
 using OhSubtitle.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -15,10 +17,22 @@ namespace OhSubtitle
 {
     public partial class MainWindow : Window
     {
+        #region DefaultValue 默认值
         /// <summary>
         /// 窗体透明时的不透明度
         /// </summary>
-        const double MinimumOpacity = 0.15d;
+        const double WindowMinimumOpacity = 0.15d;
+
+        /// <summary>
+        /// 窗体默认宽度
+        /// </summary>
+        const double WindowDefaultWidth = 860;
+
+        /// <summary>
+        /// 窗体默认高度
+        /// </summary>
+        const double WindowDefaultHeight = 65;
+        #endregion DefaultValue 默认值
 
         [DllImport("user32.dll")]
         private static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
@@ -26,44 +40,171 @@ namespace OhSubtitle
         private static readonly IntPtr _hwndTopMost = new IntPtr(-1);
 
         /// <summary>
-        /// 结束输入后的计时器
-        /// </summary>
-        private readonly DispatcherTimer _typingTimer;
-
-        /// <summary>
-        /// 翻译服务
-        /// </summary>
-        private ITranslationService _translationService;
-
-        /// <summary>
-        /// 字典服务
-        /// </summary>
-        private IDictionaryService? _dictionaryService;
-
-        /// <summary>
         /// 该线程负责周期性地将窗体设为置顶（与视频播放器争夺 TopMost）
         /// </summary>
         private Thread? _setTopMostThread;
+
+        /// <summary>
+        /// 结束输入后的计时器
+        /// </summary>
+        private readonly DispatcherTimer _typingTimer;
 
         /// <summary>
         /// 是否退出
         /// </summary>
         private bool _isExit = false;
 
+        /// <summary>
+        /// 翻译服务，用于翻译句子
+        /// </summary>
+        private ITranslationService _translationService;
+
+        /// <summary>
+        /// 字典服务，用于查询单个单词的释义
+        /// </summary>
+        private IDictionaryService? _dictionaryService;
+
+        /// <summary>
+        /// 主题颜色
+        /// </summary>
+        private ThemeColors _themeColor;
+
+        /// <summary>
+        /// 主题颜色
+        /// </summary>
+        protected ThemeColors ThemeColor
+        {
+            get
+            {
+                return _themeColor;
+            }
+            set
+            {
+                _themeColor = value;
+
+                menuThemeColorWhite.IsChecked = false;
+                menuThemeColorDimGray.IsChecked = false;
+                menuThemeColorLightGray.IsChecked = false;
+                menuThemeColorBlack.IsChecked = false;
+
+                switch (_themeColor)
+                {
+                    case ThemeColors.White:
+                        SetWindowColor(Brushes.White, Brushes.Black);
+                        menuThemeColorWhite.IsChecked = true;
+                        break;
+                    case ThemeColors.LightGray:
+                        SetWindowColor(Brushes.LightGray, Brushes.Black);
+                        menuThemeColorLightGray.IsChecked = true;
+                        break;
+                    case ThemeColors.DimGray:
+                        SetWindowColor(Brushes.DimGray, Brushes.White);
+                        menuThemeColorDimGray.IsChecked = true;
+                        break;
+                    case ThemeColors.Black:
+                    default:
+                        SetWindowColor(Brushes.Black, Brushes.FloralWhite);
+                        menuThemeColorBlack.IsChecked = true;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 语言模式
+        /// </summary>
+        private LangModels _langModel;
+
+        /// <summary>
+        /// 语言模式
+        /// </summary>
+        [MemberNotNull(nameof(_translationService))]
+        protected LangModels LangModel
+        {
+            get
+            {
+                return _langModel;
+            }
+            set
+            {
+                _langModel = value;
+
+                menuLangModelZhEn.IsChecked = false;
+                menuLangModelZhJp.IsChecked = false;
+
+                switch (LangModel)
+                {
+                    case LangModels.ZhJp:
+                        _translationService = new GoogleJapaneseTranslationService();
+                        _dictionaryService = null;
+                        
+                        menuLangModelZhJp.IsChecked = true;
+                        menuThemeColorWhite.Header = "亮白 白い";
+                        menuThemeColorLightGray.Header = "亮灰 薄いグレー";
+                        menuThemeColorDimGray.Header = "暗灰 暗いグレー";
+                        menuThemeColorBlack.Header = "暗黑 黒";
+                        menuExit.Header = "退出 终了";
+                        break;
+                    case LangModels.ZhEn:
+                    default:
+                        _translationService = new GoogleEnglishTranslationService();
+                        _dictionaryService = new YoudaoEnglishDictionaryService();
+
+                        menuLangModelZhEn.IsChecked = true;
+                        menuThemeColorWhite.Header = "亮白 White";
+                        menuThemeColorLightGray.Header = "亮灰 LightGray";
+                        menuThemeColorDimGray.Header = "暗灰 DimGray";
+                        menuThemeColorBlack.Header = "暗黑 Black";
+                        menuExit.Header = "退出 Exit";
+                        break;
+                }
+
+                ResetTypingTimer();
+            }
+        }
+
         public MainWindow()
         {
+            // 读取配置文件
+            try
+            {
+                // 设置位置、大小
+                Rect restoreBounds = Properties.Settings.Default.MainWindowsRect;
+                Left = restoreBounds.Left;
+                Top = restoreBounds.Top;
+                Width = restoreBounds.Width;
+                Height = restoreBounds.Height;
+            }
+            catch
+            {
+                Width = 860;
+                Height = 65;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+
             _typingTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(800)
             };
-            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync!);
-
-            _translationService = new GoogleEnglishTranslationService();
-            _dictionaryService = new YoudaoEnglishDictionaryService();
 
             InitializeComponent();
+
+            // 读取配置文件
+            try
+            {
+                ThemeColor = Properties.Settings.Default.ThemeColor;
+                LangModel = Properties.Settings.Default.LangModel;
+            }
+            catch
+            {
+                ThemeColor = ThemeColors.Black;
+                LangModel = LangModels.ZhEn;
+            }
+
+            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync!);
         }
 
+        #region WindowEvent & Action 窗体事件与方法
         /// <summary>
         /// 窗体
         /// 加载完毕
@@ -79,7 +220,7 @@ namespace OhSubtitle
             {
                 if (Opacity == 1)
                 {
-                    Opacity = MinimumOpacity;
+                    Opacity = WindowMinimumOpacity;
                 }
                 else
                 {
@@ -132,29 +273,29 @@ namespace OhSubtitle
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // 保存当前位置、大小和状态到配置文件
+            Properties.Settings.Default.MainWindowsRect = RestoreBounds;
+            Properties.Settings.Default.ThemeColor = ThemeColor;
+            Properties.Settings.Default.LangModel = LangModel;
+            Properties.Settings.Default.Save();
+
             _isExit = true;
         }
 
         /// <summary>
-        /// 文本输入框
-        /// 文本改变
+        /// 设置窗体颜色
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)
+        /// <param name="background"></param>
+        /// <param name="foreground"></param>
+        private void SetWindowColor(Brush background, Brush foreground)
         {
-            ResetTypingTimer();
+            Background = txtInput.Background = background;
+            txtInput.Foreground = txtResult.Foreground = foreground;
+            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
         }
+        #endregion WindowEvent & Action 窗体事件与方法
 
-        /// <summary>
-        /// 重置结束输入后的计时器，计时器倒计时结束后将执行<see cref="HandleTypingTimerTimeoutAsync"/>
-        /// </summary>
-        private void ResetTypingTimer()
-        {
-            _typingTimer.Stop();
-            _typingTimer.Start();
-        }
-
+        #region ImgButton 按钮
         /// <summary>
         /// 重置按钮
         /// 鼠标单击
@@ -189,7 +330,7 @@ namespace OhSubtitle
         /// <param name="e"></param>
         private void GridEye_MouseEnter(object sender, MouseEventArgs e)
         {
-            Opacity = MinimumOpacity;
+            Opacity = WindowMinimumOpacity;
         }
 
         /// <summary>
@@ -202,7 +343,9 @@ namespace OhSubtitle
         {
             Opacity = 1;
         }
+        #endregion ImgButton 按钮
 
+        #region ContextMenu 右键菜单
         /// <summary>
         /// 右键菜单
         /// 退出
@@ -221,17 +364,9 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuModelZhEn_Click(object sender, RoutedEventArgs e)
+        private void MenuLangModelZhEn_Click(object sender, RoutedEventArgs e)
         {
-            menuModelZhEn.IsChecked = true;
-            menuModelZhJp.IsChecked = false;
-
-            RefreshMenuHeaders();
-
-            _translationService = new GoogleEnglishTranslationService();
-            _dictionaryService = new YoudaoEnglishDictionaryService();
-
-            ResetTypingTimer();
+            LangModel = LangModels.ZhEn;
         }
 
         /// <summary>
@@ -240,17 +375,9 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuModelZhJp_Click(object sender, RoutedEventArgs e)
+        private void MenuLangModelZhJp_Click(object sender, RoutedEventArgs e)
         {
-            menuModelZhEn.IsChecked = false;
-            menuModelZhJp.IsChecked = true;
-
-            RefreshMenuHeaders();
-
-            _translationService = new GoogleJapaneseTranslationService();
-            _dictionaryService = null;
-
-            ResetTypingTimer();
+            LangModel = LangModels.ZhJp;
         }
 
         /// <summary>
@@ -259,14 +386,9 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuColorWhite_Click(object sender, RoutedEventArgs e)
+        private void MenuThemeColorWhite_Click(object sender, RoutedEventArgs e)
         {
-            menuColorWhite.IsChecked = true;
-            menuColorLightGray.IsChecked = false;
-            menuColorDimGray.IsChecked = false;
-            menuColorBlack.IsChecked = false;
-
-            RefreshWindowColor();
+            ThemeColor = ThemeColors.White;
         }
 
         /// <summary>
@@ -275,14 +397,9 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuColorLightGray_Click(object sender, RoutedEventArgs e)
+        private void MenuThemeColorLightGray_Click(object sender, RoutedEventArgs e)
         {
-            menuColorWhite.IsChecked = false;
-            menuColorLightGray.IsChecked = true;
-            menuColorDimGray.IsChecked = false;
-            menuColorBlack.IsChecked = false;
-
-            RefreshWindowColor();
+            ThemeColor = ThemeColors.LightGray;
         }
 
         /// <summary>
@@ -291,14 +408,9 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuColorDimGray_Click(object sender, RoutedEventArgs e)
+        private void MenuThemeColorDimGray_Click(object sender, RoutedEventArgs e)
         {
-            menuColorWhite.IsChecked = false;
-            menuColorLightGray.IsChecked = false;
-            menuColorDimGray.IsChecked = true;
-            menuColorBlack.IsChecked = false;
-
-            RefreshWindowColor();
+            ThemeColor = ThemeColors.DimGray;
         }
 
         /// <summary>
@@ -307,68 +419,13 @@ namespace OhSubtitle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuColorBlack_Click(object sender, RoutedEventArgs e)
+        private void MenuThemeColorBlack_Click(object sender, RoutedEventArgs e)
         {
-            menuColorWhite.IsChecked = false;
-            menuColorDimGray.IsChecked = false;
-            menuColorLightGray.IsChecked = false;
-            menuColorBlack.IsChecked = true;
-
-            RefreshWindowColor();
+            ThemeColor = ThemeColors.Black;
         }
+        #endregion ContextMenu 右键菜单
 
-        /// <summary>
-        /// 刷新窗体颜色
-        /// </summary>
-        private void RefreshWindowColor()
-        {
-            if (menuColorWhite.IsChecked)
-            {
-                Background = txtInput.Background = Brushes.White;
-                txtInput.Foreground = txtResult.Foreground = Brushes.Black;
-                imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.Black;
-                return;
-            }
-            if (menuColorLightGray.IsChecked)
-            {
-                Background = txtInput.Background = Brushes.LightGray;
-                txtInput.Foreground = txtResult.Foreground = Brushes.Black;
-                imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.Black;
-                return;
-            }
-            if (menuColorDimGray.IsChecked)
-            {
-                Background = txtInput.Background = Brushes.DimGray;
-                txtInput.Foreground = txtResult.Foreground = Brushes.White;
-                imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.White;
-                return;
-            }
-            Background = txtInput.Background = Brushes.Black;
-            txtInput.Foreground = txtResult.Foreground = Brushes.FloralWhite;
-            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = Brushes.FloralWhite;
-        }
-
-        /// <summary>
-        /// 刷新右键菜单的 Header
-        /// </summary>
-        private void RefreshMenuHeaders()
-        {
-            if (menuModelZhEn.IsChecked)
-            {
-                menuColorWhite.Header = "亮白 White";
-                menuColorLightGray.Header = "亮灰 LightGray";
-                menuColorDimGray.Header = "暗灰 DimGray";
-                menuColorBlack.Header = "暗黑 Black";
-                menuExit.Header = "退出 Exit";
-                return;
-            }
-            menuColorWhite.Header = "亮白 白い";
-            menuColorLightGray.Header = "亮灰 薄いグレー";
-            menuColorDimGray.Header = "暗灰 暗いグレー";
-            menuColorBlack.Header = "暗黑 黒";
-            menuExit.Header = "退出 终了";
-        }
-
+        #region CommandBinding 快捷键
         /// <summary>
         /// 快捷键
         /// 切换窗体不透明度
@@ -379,12 +436,34 @@ namespace OhSubtitle
         {
             if (Opacity == 1)
             {
-                Opacity = MinimumOpacity;
+                Opacity = WindowMinimumOpacity;
             }
             else
             {
                 Opacity = 1;
             }
+        }
+        #endregion CommandBinding 快捷键
+
+        #region TypingEvent & Timer 输入事件与计时器
+        /// <summary>
+        /// 重置结束输入后的计时器，计时器倒计时结束后将执行<see cref="HandleTypingTimerTimeoutAsync"/>
+        /// </summary>
+        private void ResetTypingTimer()
+        {
+            _typingTimer.Stop();
+            _typingTimer.Start();
+        }
+
+        /// <summary>
+        /// 文本输入框
+        /// 文本改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ResetTypingTimer();
         }
 
         /// <summary>
@@ -411,7 +490,7 @@ namespace OhSubtitle
 
                 if (!isFinish && _dictionaryService != null) // 查单词
                 {
-                    if (menuModelZhEn.IsChecked && txtInput.Text.IsAEnglishWord()) // 目前只有英文单词支持查单词
+                    if (txtInput.Text.IsAEnglishWord()) // 目前只有英文单词支持查单词
                     {
                         var result = await _dictionaryService.QueryAsync(txtInput.Text);
                         if (string.IsNullOrEmpty(result))
@@ -435,5 +514,6 @@ namespace OhSubtitle
                 imgReset.Visibility = Visibility.Visible;
             }
         }
+        #endregion TypingEvent & Timer 输入事件与计时器
     }
 }

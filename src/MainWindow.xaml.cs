@@ -304,7 +304,7 @@ namespace OhSubtitle
         {
             Background = txtInput.Background = background;
             txtInput.Foreground = txtResult.Foreground = foreground;
-            imgLoading.Foreground = imgReset.Foreground = imgWriteNote.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
+            imgLoading.Foreground = imgReset.Foreground = imgWriteNote.Foreground = imgNoteWrote.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
         }
         #endregion WindowEvent & Action 窗体事件与方法
 
@@ -367,10 +367,16 @@ namespace OhSubtitle
         {
             try
             {
+                imgWriteNote.Visibility = Visibility.Hidden;
+                imgNoteWrote.Visibility = Visibility.Visible;
+
                 await _noteService.WriteAsync(txtInput.Text, txtResult.Text);
             }
             catch
             {
+                imgWriteNote.Visibility = Visibility.Visible;
+                imgNoteWrote.Visibility = Visibility.Hidden;
+
                 txtInput.Text = "笔记记录失败，可能是因为文件被占用或没有写入文件的权限。如果您已打开笔记文件，请将其关闭后再记录笔记；如果依然无法记录笔记，请尝试使用系统管理员权限启动本应用。";
             }
         }
@@ -505,6 +511,7 @@ namespace OhSubtitle
         private async void HandleTypingTimerTimeoutAsync(object sender, EventArgs e)
         {
             imgWriteNote.Visibility = Visibility.Hidden;
+            imgNoteWrote.Visibility = Visibility.Hidden;
             imgReset.Visibility = Visibility.Hidden;
             imgLoading.Visibility = Visibility.Visible;
 

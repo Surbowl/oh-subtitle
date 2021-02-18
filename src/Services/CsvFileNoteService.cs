@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace OhSubtitle.Services
         /// <summary>
         /// 表头
         /// </summary>
-        const string TableHeader = "原文,翻译";
+        const string TableHeader = "时间,原文,翻译";
 
         /// <summary>
         /// 笔记文件名
@@ -69,8 +70,8 @@ namespace OhSubtitle.Services
             translated = translated.Replace('\n', ' ')
                                    .Replace(',', '，');
 
-            string appendText = File.Exists(FullFilePath) ? $"\n{orig},{translated}"
-                                                          : $"{TableHeader}\n{orig},{translated}";
+            string appendText = File.Exists(FullFilePath) ? $"\n{DateTime.Now:yyyy-MM-dd HH:mm},{orig},{translated}"
+                                                          : $"{TableHeader}\n{DateTime.Now:yyyy-MM-dd HH:mm},{orig},{translated}";
             if (cancellationToken.IsCancellationRequested)
             {
                 return;

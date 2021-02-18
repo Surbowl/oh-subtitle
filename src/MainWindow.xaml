@@ -21,6 +21,8 @@
                  TextChanged="TxtInput_TextChanged"/>
         <fa:ImageAwesome x:Name="imgWriteNote" Icon="BookmarkOutline" Width="13" Height="13" Grid.Column="1" Margin="0,30,0,2" Foreground="FloralWhite" Visibility="Hidden"
                          MouseDown="ImgWriteNote_MouseDown" Cursor="Hand" ToolTip="记笔记 WriteNote"/>
+        <fa:ImageAwesome x:Name="imgNoteWrote" Icon="Bookmark" Width="13" Height="13" Grid.Column="1" Margin="0,30,0,2" Foreground="FloralWhite" Visibility="Hidden"
+                         ToolTip="笔记已添加到文件：我的笔记MyNote.csv"/>
         <fa:ImageAwesome x:Name="imgReset" Icon="TrashOutline" Height="14" Width="14" Grid.Column="1" Margin="0,2,0,20" Foreground="FloralWhite" Visibility="Hidden"
                          MouseDown="ImgReset_MouseDown" Cursor="Hand" ToolTip="清空输入框 ClearInput"/>
         <fa:ImageAwesome x:Name="imgLoading" Icon="Refresh" Spin="True" Height="14" Width="14" Grid.Column="1" Foreground="FloralWhite" Visibility="Hidden"/>

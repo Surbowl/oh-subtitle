@@ -65,9 +65,19 @@ namespace OhSubtitle
         private IDictionaryService? _dictionaryService;
 
         /// <summary>
+        /// 笔记服务，用于记笔记
+        /// </summary>
+        private INoteService _noteService;
+
+        /// <summary>
         /// 主题颜色
         /// </summary>
         private ThemeColors _themeColor;
+
+        /// <summary>
+        /// 语言模式
+        /// </summary>
+        private LangModels _langModel;
 
         /// <summary>
         /// 主题颜色
@@ -113,11 +123,6 @@ namespace OhSubtitle
         /// <summary>
         /// 语言模式
         /// </summary>
-        private LangModels _langModel;
-
-        /// <summary>
-        /// 语言模式
-        /// </summary>
         [MemberNotNull(nameof(_translationService))]
         protected LangModels LangModel
         {
@@ -137,13 +142,15 @@ namespace OhSubtitle
                     case LangModels.ZhJp:
                         _translationService = new GoogleJapaneseTranslationService();
                         _dictionaryService = null;
-                        
+
                         menuLangModelZhJp.IsChecked = true;
                         menuThemeColorWhite.Header = "亮白 白い";
                         menuThemeColorLightGray.Header = "亮灰 薄いグレー";
                         menuThemeColorDimGray.Header = "暗灰 暗いグレー";
                         menuThemeColorBlack.Header = "暗黑 黒";
                         menuExit.Header = "退出 终了";
+                        imgWriteNote.ToolTip = "记笔记 ノートをとる";
+                        imgReset.ToolTip = "清空输入框 空入力";
                         break;
                     case LangModels.ZhEn:
                     default:
@@ -156,6 +163,8 @@ namespace OhSubtitle
                         menuThemeColorDimGray.Header = "暗灰 DimGray";
                         menuThemeColorBlack.Header = "暗黑 Black";
                         menuExit.Header = "退出 Exit";
+                        imgWriteNote.ToolTip = "记笔记 WriteNote";
+                        imgReset.ToolTip = "清空输入框 ClearInput";
                         break;
                 }
 
@@ -165,43 +174,37 @@ namespace OhSubtitle
 
         public MainWindow()
         {
-            // 读取配置文件
+            _typingTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(800)
+            };
+            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync!);
+
+            InitializeComponent();
+
+            // 读取配置文件，设置位置、大小、主题颜色和语言模式
             try
             {
-                // 设置位置、大小
                 Rect restoreBounds = Properties.Settings.Default.MainWindowsRect;
                 Left = restoreBounds.Left;
                 Top = restoreBounds.Top;
                 Width = restoreBounds.Width;
                 Height = restoreBounds.Height;
-            }
-            catch
-            {
-                Width = 860;
-                Height = 65;
-                WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            }
 
-            _typingTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(800)
-            };
-
-            InitializeComponent();
-
-            // 读取配置文件
-            try
-            {
                 ThemeColor = Properties.Settings.Default.ThemeColor;
                 LangModel = Properties.Settings.Default.LangModel;
             }
             catch
             {
+                Width = WindowDefaultWidth;
+                Height = WindowDefaultHeight;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
                 ThemeColor = ThemeColors.Black;
                 LangModel = LangModels.ZhEn;
             }
 
-            _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync!);
+            _noteService = new CsvFileNoteService();
         }
 
         #region WindowEvent & Action 窗体事件与方法
@@ -291,7 +294,7 @@ namespace OhSubtitle
         {
             Background = txtInput.Background = background;
             txtInput.Foreground = txtResult.Foreground = foreground;
-            imgLoading.Foreground = imgReset.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
+            imgLoading.Foreground = imgReset.Foreground = imgWriteNote.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
         }
         #endregion WindowEvent & Action 窗体事件与方法
 
@@ -342,6 +345,24 @@ namespace OhSubtitle
         private void GridEye_MouseLeave(object sender, MouseEventArgs e)
         {
             Opacity = 1;
+        }
+
+        /// <summary>
+        /// 笔记按钮
+        /// 鼠标单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void ImgWriteNote_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                await _noteService.WriteAsync(txtInput.Text, txtResult.Text);
+            }
+            catch
+            {
+                txtInput.Text = "笔记记录失败，可能是因为文件被占用或没有写入文件的权限。如果您已打开笔记文件，请将其关闭后再记录笔记；如果依然无法记录笔记，请尝试使用系统管理员权限启动本应用。";
+            }
         }
         #endregion ImgButton 按钮
 
@@ -473,6 +494,7 @@ namespace OhSubtitle
         /// <param name="e"></param>
         private async void HandleTypingTimerTimeoutAsync(object sender, EventArgs e)
         {
+            imgWriteNote.Visibility = Visibility.Hidden;
             imgReset.Visibility = Visibility.Hidden;
             imgLoading.Visibility = Visibility.Visible;
 
@@ -509,8 +531,9 @@ namespace OhSubtitle
             }
 
             imgLoading.Visibility = Visibility.Hidden;
-            if (!string.IsNullOrWhiteSpace(txtResult.Text))
+            if (!string.IsNullOrWhiteSpace(txtInput.Text))
             {
+                imgWriteNote.Visibility = Visibility.Visible;
                 imgReset.Visibility = Visibility.Visible;
             }
         }

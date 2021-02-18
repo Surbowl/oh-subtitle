@@ -4,6 +4,7 @@ using OhSubtitle.Helpers.Enums;
 using OhSubtitle.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -123,7 +124,7 @@ namespace OhSubtitle
         /// <summary>
         /// 语言模式
         /// </summary>
-        [MemberNotNull(nameof(_translationService))]
+        //[MemberNotNull(nameof(_translationService))]
         protected LangModels LangModel
         {
             get
@@ -204,6 +205,11 @@ namespace OhSubtitle
                 LangModel = LangModels.ZhEn;
             }
 
+            if (_translationService == null)
+            {
+                _translationService = new GoogleJapaneseTranslationService();
+            }
+
             _noteService = new CsvFileNoteService();
         }
 
@@ -276,6 +282,10 @@ namespace OhSubtitle
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            imgWriteNote.Visibility = Visibility.Hidden;
+            imgReset.Visibility = Visibility.Hidden;
+            imgLoading.Visibility = Visibility.Visible;
+
             // 保存当前位置、大小和状态到配置文件
             Properties.Settings.Default.MainWindowsRect = RestoreBounds;
             Properties.Settings.Default.ThemeColor = ThemeColor;

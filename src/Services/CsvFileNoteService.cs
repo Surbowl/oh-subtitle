@@ -28,7 +28,7 @@ namespace OhSubtitle.Services
         /// <summary>
         /// 完整文件路径
         /// </summary>
-        public string FullFilePath => BaseDirectoryPath + FileName;
+        public string FullFilePath => BaseDirectoryPath + '\\' + FileName;
 
         /// <summary>
         /// Create a CsvFileNoteService
@@ -41,7 +41,7 @@ namespace OhSubtitle.Services
         /// Create a CsvFileNoteService
         /// </summary>
         /// <param name="fileName">笔记文件名</param>
-        public CsvFileNoteService(string fileName) : this(System.AppDomain.CurrentDomain.BaseDirectory, fileName)
+        public CsvFileNoteService(string fileName) : this(Directory.GetCurrentDirectory(), fileName)
         {
         }
 

@@ -205,7 +205,7 @@ namespace OhSubtitle
 
             if (_translationService == null)
             {
-                _translationService = new GoogleJapaneseTranslationService();
+                _translationService = new GoogleEnglishTranslationService();
             }
 
             _noteService = new CsvFileNoteService();

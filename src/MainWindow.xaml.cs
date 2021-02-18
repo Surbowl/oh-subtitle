@@ -3,8 +3,6 @@ using OhSubtitle.Helpers;
 using OhSubtitle.Helpers.Enums;
 using OhSubtitle.Services;
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;

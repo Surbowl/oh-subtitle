@@ -6,7 +6,7 @@
 
 ## Download
 - [v1.1.1_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.1.1_win_x86.zip)
-  - 修复已知 BUG
+  - 修复无法识别日语并翻译为中文的 BUG
 - [v1.1.0_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.1.0_win_x86.zip)
   - 添加对日语的支持
   - 添加笔记本功能

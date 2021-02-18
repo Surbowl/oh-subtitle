@@ -1,6 +1,7 @@
 # Oh-Subtitle
 <img src="https://github.com/Surbowl/Oh-Subtitle/blob/master/images/icon.png?raw=true" width="50" />
 看剧学英语时没有合适的工具遮挡字幕？试试这款简洁的小程序，轻松遮盖字幕，还能查单词 (＾Ｕ＾)ノ
+
 更多信息请浏览知乎文章[《分享一款带翻译功能的挡字幕小工具，方便看剧学英语、日语》](https://zhuanlan.zhihu.com/p/256343803)
 
 ## Download

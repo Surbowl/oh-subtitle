@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using OhSubtitle.Helpers;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OhSubtitle.Services
@@ -45,7 +46,7 @@ namespace OhSubtitle.Services
                 return await "http://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto"
                        .SetQueryParams(new
                        {
-                           tl = orig.ContainsChineseCharacters() ? "en" : "zh",
+                           tl = IsCJKUnifiedIdeographs(orig) ? "en" : "zh",
                            q = orig
                        })
                        .GetJsonAsync<JToken>();
@@ -72,6 +73,26 @@ namespace OhSubtitle.Services
                 sb.Append(sentence + ' ');
             }
             return sb.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// 判断是否存在中/日/韩字符
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public bool IsCJKUnifiedIdeographs(string str)
+        {
+            if (str == null)
+            {
+                return false;
+            }
+            str = str.Trim();
+            if (str.Length == 0)
+            {
+                return false;
+            }
+            var regex = new Regex(@"\p{IsCJKUnifiedIdeographs}");
+            return regex.IsMatch(str);
         }
     }
 }

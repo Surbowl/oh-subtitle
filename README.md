@@ -5,6 +5,8 @@
 更多信息请浏览知乎文章[《分享一款带翻译功能的挡字幕小工具，方便看剧学英语、日语》](https://zhuanlan.zhihu.com/p/256343803)
 
 ## Download
+- [v1.1.1_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.1.1_win_x86.zip)
+  - 修复已知 BUG
 - [v1.1.0_win_x86](https://github.com/Surbowl/Oh-Subtitle/raw/master/publish/Oh-Subtitle_v1.1.0_win_x86.zip)
   - 添加对日语的支持
   - 添加笔记本功能

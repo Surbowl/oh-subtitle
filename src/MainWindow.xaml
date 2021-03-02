@@ -16,7 +16,7 @@
             <ColumnDefinition Width="18"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="txtInput" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,2" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="2000" TextWrapping="Wrap" Text="在左侧输入要翻译的句子，按 Ctrl+Q 切换不透明度"
+                 TextAlignment="Center" VerticalContentAlignment="Center" MaxLength="2000" TextWrapping="Wrap" Text="在左侧输入要翻译的句子，按 Ctrl+Q 切换不透明度，右击边缘打开菜单"
                  Background="Black" Foreground="FloralWhite" FontSize="14"
                  TextChanged="TxtInput_TextChanged"/>
         <fa:ImageAwesome x:Name="imgWriteNote" Icon="BookmarkOutline" Width="13" Height="13" Grid.Column="1" Margin="0,30,0,2" Foreground="FloralWhite" Visibility="Hidden"
@@ -27,9 +27,8 @@
                          MouseDown="ImgReset_MouseDown" Cursor="Hand" ToolTip="清空输入框 ClearInput"/>
         <fa:ImageAwesome x:Name="imgLoading" Icon="Refresh" Spin="True" Height="14" Width="14" Grid.Column="1" Foreground="FloralWhite" Visibility="Hidden"/>
         <ScrollViewer Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="5,10,5,2">
-            <TextBlock x:Name="txtResult" HorizontalAlignment="Stretch"
-                       TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
-                       Foreground="FloralWhite" FontSize="14"/>
+            <TextBox x:Name="txtResult" HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="14"
+                     Background="Black" Foreground="FloralWhite" BorderThickness="0" IsReadOnly="True" IsTabStop="False"/>
         </ScrollViewer>
         <fa:ImageAwesome x:Name="imgClose" Icon="WindowClose" Margin="0,2,2,0" Width="14" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="3" Foreground="FloralWhite"
                          MouseDown="ImgClose_MouseDown" Cursor="Hand"/>

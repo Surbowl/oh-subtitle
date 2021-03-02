@@ -268,7 +268,16 @@ namespace OhSubtitle
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                DragMove();
+                if (Mouse.LeftButton == MouseButtonState.Pressed)
+                {
+                    ResizeMode = ResizeMode.NoResize; // 防止窗口拖到屏幕边缘自动最大化
+                    UpdateLayout();
+
+                    DragMove(); // 拖动窗体
+
+                    ResizeMode = ResizeMode.CanResizeWithGrip;
+                    UpdateLayout();
+                }
             }
         }
 
@@ -300,7 +309,7 @@ namespace OhSubtitle
         /// <param name="foreground"></param>
         private void SetWindowColor(Brush background, Brush foreground)
         {
-            Background = txtInput.Background = background;
+            Background = txtInput.Background = txtResult.Background = background;
             txtInput.Foreground = txtResult.Foreground = foreground;
             imgLoading.Foreground = imgReset.Foreground = imgWriteNote.Foreground = imgNoteWrote.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
         }

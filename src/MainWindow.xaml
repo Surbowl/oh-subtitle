@@ -6,9 +6,10 @@
         Topmost="True" WindowStyle="None" Background="Black"
         AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         MouseDown="Window_MouseDown" Loaded="Window_Loaded"
+        MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave"
         Closing="Window_Closing"
         ShowInTaskbar="False">
-    <Grid>
+    <Grid x:Name="sideButtonsGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="14"/>

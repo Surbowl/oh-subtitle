@@ -283,6 +283,38 @@ namespace OhSubtitle
 
         /// <summary>
         /// 窗体
+        /// 鼠标移入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            sideButtonsGrid.Opacity = 1;
+            var resize = this.Template.FindName("WindowResizeGrip", this) as Control;
+            if (resize != null)
+            {
+                resize.Opacity = 1;
+            }
+        }
+
+        /// <summary>
+        /// 窗体
+        /// 鼠标移出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            sideButtonsGrid.Opacity = 0;
+            var resize = this.Template.FindName("WindowResizeGrip", this) as Control;
+            if (resize != null)
+            {
+                resize.Opacity = 0;
+            }
+        }
+
+        /// <summary>
+        /// 窗体
         /// 关闭中
         /// </summary>
         /// <param name="sender"></param>

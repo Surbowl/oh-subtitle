@@ -5,6 +5,12 @@
 更多信息请浏览知乎文章[《分享一款带翻译功能的挡字幕小工具，方便看剧学英语、日语》](https://zhuanlan.zhihu.com/p/256343803)
 
 ## Download
+- [v1.1.3](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.3)
+  - 更新翻译 API Url，解决部分句子不能翻译的问题
+  - CSV 笔记本模块优化，支持英文逗号与双引号
+- [v1.1.2](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.2)
+  - 修复窗体拖动到屏幕边缘时自动全屏的 BUG
+  - 翻译结果支持复制
 - [v1.1.1](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.1)
   - 修复无法识别日语并翻译为中文的 BUG
 - [v1.1.0](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.0)

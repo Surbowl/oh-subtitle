@@ -65,13 +65,13 @@ namespace OhSubtitle.Services
         /// <returns></returns>
         public async Task WriteAsync(string orig, string translated, CancellationToken cancellationToken = default)
         {
-            orig = orig.Replace('\n', ' ')
-                       .Replace(',', '，');
-            translated = translated.Replace('\n', ' ')
-                                   .Replace(',', '，');
+            orig = orig.Replace("\"", "\"\"")
+                       .Replace('\n', ' ');
+            translated = translated.Replace("\"", "\"\"")
+                                   .Replace('\n', ' ');
 
-            string appendText = File.Exists(FullFilePath) ? $"\n{DateTime.Now:yyyy-MM-dd HH:mm},{orig},{translated}"
-                                                          : $"{TableHeader}\n{DateTime.Now:yyyy-MM-dd HH:mm},{orig},{translated}";
+            string appendText = File.Exists(FullFilePath) ? $"\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{orig}\",\"{translated}\""
+                                                          : $"{TableHeader}\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{orig}\",\"{translated}\"";
             if (cancellationToken.IsCancellationRequested)
             {
                 return;

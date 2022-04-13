@@ -6,8 +6,9 @@
 
 ## Download
 - [v1.1.3](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.3)
-  - 更新翻译 API Url，解决部分句子不能翻译的问题
+  - 由于 google.cn 停止服务，替换翻译 API，解决中国大陆地区不能翻译的问题
   - CSV 笔记本模块优化，支持英文逗号与双引号
+  - 框架由 dotnet 3.1 升级至 dotnet 6.0
 - [v1.1.2](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.2)
   - 修复窗体拖动到屏幕边缘时自动全屏的 BUG
   - 翻译结果支持复制

@@ -139,7 +139,7 @@ namespace OhSubtitle
                 switch (LangModel)
                 {
                     case LangModels.ZhJp:
-                        _translationService = new GoogleJapaneseTranslationService();
+                        _translationService = new YoudaoJapaneseTranslationService();
                         _dictionaryService = null;
 
                         menuLangModelZhJp.IsChecked = true;
@@ -153,7 +153,7 @@ namespace OhSubtitle
                         break;
                     case LangModels.ZhEn:
                     default:
-                        _translationService = new GoogleEnglishTranslationService();
+                        _translationService = new YoudaoEnglishTranslationService();
                         _dictionaryService = new YoudaoEnglishDictionaryService();
 
                         menuLangModelZhEn.IsChecked = true;
@@ -205,7 +205,7 @@ namespace OhSubtitle
 
             if (_translationService == null)
             {
-                _translationService = new GoogleEnglishTranslationService();
+                _translationService = new YoudaoEnglishTranslationService();
             }
 
             _noteService = new CsvFileNoteService();

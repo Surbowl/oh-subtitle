@@ -2,9 +2,9 @@
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using OhSubtitle.Helpers;
+using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OhSubtitle.Services
@@ -12,6 +12,7 @@ namespace OhSubtitle.Services
     /// <summary>
     /// 谷歌中日文翻译
     /// </summary>
+    [Obsolete("谷歌服务在大陆地区不可用", true)]
     public class GoogleJapaneseTranslationService : ITranslationService
     {
         /// <summary>
@@ -46,7 +47,7 @@ namespace OhSubtitle.Services
                 return await "http://translate.google.com/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto"
                        .SetQueryParams(new
                        {
-                           tl = IsContainsJapaneseCharacters(orig) ? "zh" : "ja",
+                           tl = orig.IsContainsJapaneseCharacters() ? "zh" : "ja",
                            q = orig
                        })
                        .GetJsonAsync<JToken>();
@@ -73,26 +74,6 @@ namespace OhSubtitle.Services
                 sb.Append(sentence + ' ');
             }
             return sb.ToString().TrimEnd();
-        }
-
-        /// <summary>
-        /// 判断是否存在日文字符
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>存在中文字符</returns>
-        public bool IsContainsJapaneseCharacters(string str)
-        {
-            if (str == null)
-            {
-                return false;
-            }
-            str = str.Trim();
-            if (str.Length == 0)
-            {
-                return false;
-            }
-            var regex = new Regex(@"[\u3040-\u309F\u30A0-\u30FF]");
-            return regex.IsMatch(str);
         }
     }
 }

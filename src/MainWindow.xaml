@@ -39,8 +39,8 @@
     </Grid>
     <Window.ContextMenu>
         <ContextMenu Name="menu">
-            <MenuItem Name="menuLangModelZhEn" Header="英语模式 EnglishMode" IsCheckable="True" Click="MenuLangModelZhEn_Click" IsChecked="True"></MenuItem>
-            <MenuItem Name="menuLangModelZhJp" Header="日语模式 日本語モデル" IsCheckable="True" Click="MenuLangModelZhJp_Click"></MenuItem>
+            <MenuItem Name="menuLangModelZhEn" Header="中英互译" IsCheckable="True" Click="MenuLangModelZhEn_Click" IsChecked="True"></MenuItem>
+            <MenuItem Name="menuLangModelZhJp" Header="中日互译（实验性功能）" IsCheckable="True" Click="MenuLangModelZhJp_Click"></MenuItem>
             <Separator />
             <MenuItem Name="menuThemeColorWhite" Header="亮白 White" IsCheckable="True" Click="MenuThemeColorWhite_Click"></MenuItem>
             <MenuItem Name="menuThemeColorLightGray" Header="亮灰 LightGray" IsCheckable="True" Click="MenuThemeColorLightGray_Click"></MenuItem>

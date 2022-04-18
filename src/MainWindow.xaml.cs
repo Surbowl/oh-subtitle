@@ -180,9 +180,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
-        LoadSettings();
-
-        InitializeServices();
+        LoadSettingsAndInitializeServices();
     }
 
     /// <summary>
@@ -263,30 +261,17 @@ public partial class MainWindow : Window
         imgReset.Visibility = Visibility.Hidden;
         imgLoading.Visibility = Visibility.Visible;
 
-        SaveSettings();
+        SaveCurrentSettings();
 
         _isExit = true;
     }
 
     /// <summary>
-    /// 初始化服务
+    /// 加载配置并初始化服务
     /// </summary>
     [MemberNotNull(nameof(_translationService))]
     [MemberNotNull(nameof(_noteService))]
-    private void InitializeServices()
-    {
-        if (_translationService == null)
-        {
-            _translationService = new YoudaoEnglishTranslationService();
-        }
-
-        _noteService = new CsvFileNoteService();
-    }
-
-    /// <summary>
-    /// 加载配置
-    /// </summary>
-    private void LoadSettings()
+    private void LoadSettingsAndInitializeServices()
     {
         // 读取配置文件，设置位置、大小、主题颜色和语言模式
         try
@@ -298,6 +283,7 @@ public partial class MainWindow : Window
             Height = restoreBounds.Height;
 
             ThemeColor = Properties.Settings.Default.ThemeColor;
+            // 此处将初始化 _translationService、_dictionaryService
             LangModel = Properties.Settings.Default.LangModel;
         }
         catch
@@ -307,14 +293,17 @@ public partial class MainWindow : Window
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             ThemeColor = ThemeColors.Black;
+            // 此处将初始化 _translationService、_dictionaryService
             LangModel = LangModels.ZhEn;
         }
+
+        _noteService = new CsvFileNoteService();
     }
 
     /// <summary>
     /// 保存当前配置
     /// </summary>
-    private void SaveSettings()
+    private void SaveCurrentSettings()
     {
         // 保存当前位置、大小和状态到配置文件
         Properties.Settings.Default.MainWindowsRect = RestoreBounds;
@@ -498,14 +487,7 @@ public partial class MainWindow : Window
     /// <param name="e"></param>
     private void CommandBinding_SwitchOpacity(object sender, CanExecuteRoutedEventArgs e)
     {
-        if (Opacity == 1)
-        {
-            Opacity = WINDOW_MINIUMU_OPACITY;
-        }
-        else
-        {
-            Opacity = 1;
-        }
+        Opacity = Opacity == 1 ? WINDOW_MINIUMU_OPACITY : 1;
     }
     #endregion CommandBinding 快捷键
 
@@ -515,8 +497,11 @@ public partial class MainWindow : Window
     /// </summary>
     private void ResetTypingTimer()
     {
-        _typingTimer.Stop();
-        _typingTimer.Start();
+        if (_typingTimer != null)
+        {
+            _typingTimer.Stop();
+            _typingTimer.Start();
+        }
     }
 
     /// <summary>

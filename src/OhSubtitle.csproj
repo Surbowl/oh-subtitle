@@ -5,6 +5,7 @@
 		<UseWPF>true</UseWPF>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>$(WarningsAsErrors);CS8600;CS8602;CS8603;CS8618;CS8625</WarningsAsErrors>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageIcon>icon.png</PackageIcon>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<PackageProjectUrl>https://github.com/Surbowl/Oh-Subtitle</PackageProjectUrl>

@@ -282,9 +282,9 @@ public partial class MainWindow : Window
             Width = restoreBounds.Width;
             Height = restoreBounds.Height;
 
-            ThemeColor = Properties.Settings.Default.ThemeColor;
-            // 此处将初始化 _translationService、_dictionaryService
+            // 此处将初始化 _translationService 与 _dictionaryService
             LangModel = Properties.Settings.Default.LangModel;
+            ThemeColor = Properties.Settings.Default.ThemeColor;
         }
         catch
         {
@@ -292,9 +292,9 @@ public partial class MainWindow : Window
             Height = WINDOW_DEFAULT_HEIGHT;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            ThemeColor = ThemeColors.Black;
-            // 此处将初始化 _translationService、_dictionaryService
+            // 此处将初始化 _translationService 与 _dictionaryService
             LangModel = LangModels.ZhEn;
+            ThemeColor = ThemeColors.Black;
         }
 
         _noteService = new CsvFileNoteService();

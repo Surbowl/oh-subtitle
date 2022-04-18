@@ -497,11 +497,8 @@ public partial class MainWindow : Window
     /// </summary>
     private void ResetTypingTimer()
     {
-        if (_typingTimer != null)
-        {
-            _typingTimer.Stop();
-            _typingTimer.Start();
-        }
+        _typingTimer.Stop();
+        _typingTimer.Start();
     }
 
     /// <summary>

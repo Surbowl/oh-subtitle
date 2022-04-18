@@ -41,7 +41,7 @@ public class GoogleEnglishTranslationService : ITranslationService
     {
         try
         {
-            return await "http://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto"
+            return await "http://translate.google.com/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto"
                    .SetQueryParams(new
                    {
                        tl = orig.IsContainsCJKCharacters() ? "en" : "zh",

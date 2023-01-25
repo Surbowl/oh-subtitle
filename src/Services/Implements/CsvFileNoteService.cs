@@ -11,7 +11,7 @@ public class CsvFileNoteService : INoteService
     /// <summary>
     /// 表头
     /// </summary>
-    const string TABLE_HEADER = "时间,原文,翻译";
+    const string TABLE_HEADER = "时间,笔记";
 
     /// <summary>
     /// 笔记文件名
@@ -31,7 +31,7 @@ public class CsvFileNoteService : INoteService
     /// <summary>
     /// Create a CsvFileNoteService
     /// </summary>
-    public CsvFileNoteService() : this("我的笔记MyNote.csv")
+    public CsvFileNoteService() : this("我的笔记.csv")
     {
     }
 
@@ -57,18 +57,14 @@ public class CsvFileNoteService : INoteService
     /// <summary>
     /// 记笔记
     /// </summary>
-    /// <param name="orig">用户输入的原文</param>
-    /// <param name="translated">翻译后的句子</param>
+    /// <param name="text">笔记内容</param>
     /// <returns></returns>
-    public async Task WriteAsync(string orig, string translated, CancellationToken cancellationToken = default)
+    public async Task WriteAsync(string text, CancellationToken cancellationToken = default)
     {
-        orig = orig.Replace("\"", "\"\"")
-                   .Replace('\n', ' ');
-        translated = translated.Replace("\"", "\"\"")
-                               .Replace('\n', ' ');
+        text = text.Replace("\"", "\"\"").Replace('\n', ' ');
 
-        string appendText = File.Exists(FullFilePath) ? $"\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{orig}\",\"{translated}\""
-                                                      : $"{TABLE_HEADER}\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{orig}\",\"{translated}\"";
+        string appendText = File.Exists(FullFilePath) ? $"\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{text}\""
+                                                      : $"{TABLE_HEADER}\n{DateTime.Now:yyyy-MM-dd HH:mm},\"{text}\"";
         if (cancellationToken.IsCancellationRequested)
         {
             return;

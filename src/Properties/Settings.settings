@@ -8,8 +8,5 @@
     <Setting Name="ThemeColor" Type="OhSubtitle.Enums.ThemeColors" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="LangModel" Type="OhSubtitle.Enums.LangModels" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

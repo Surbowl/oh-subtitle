@@ -40,25 +40,15 @@ public partial class MainWindow : Window
     /// </summary>
     private Thread? _setTopMostThread;
 
-    /// <summary>
-    /// 结束输入后的计时器
+    /// <summary>    
+    /// 倒计时结束时将 <see cref="gridMain"/> 设为隐藏
     /// </summary>
-    private readonly DispatcherTimer _typingTimer;
+    private readonly DispatcherTimer _gridMainHiddenTimer;
 
     /// <summary>
     /// 是否退出
     /// </summary>
     private bool _isExit = false;
-
-    /// <summary>
-    /// 翻译服务，用于翻译句子
-    /// </summary>
-    private ITranslationService _translationService;
-
-    /// <summary>
-    /// 字典服务，用于查询单个单词的释义
-    /// </summary>
-    private IDictionaryService? _dictionaryService;
 
     /// <summary>
     /// 笔记服务，用于记笔记
@@ -69,11 +59,6 @@ public partial class MainWindow : Window
     /// 主题颜色
     /// </summary>
     private ThemeColors _themeColor;
-
-    /// <summary>
-    /// 语言模式
-    /// </summary>
-    private LangModels _langModel;
 
     /// <summary>
     /// 主题颜色
@@ -117,70 +102,31 @@ public partial class MainWindow : Window
         }
     }
 
-    /// <summary>
-    /// 语言模式
-    /// </summary>
-    protected LangModels LangModel
-    {
-        get
-        {
-            return _langModel;
-        }
-
-        [MemberNotNull(nameof(_translationService))]
-        set
-        {
-            _langModel = value;
-
-            menuLangModelZhEn.IsChecked = false;
-            menuLangModelZhJp.IsChecked = false;
-
-            switch (LangModel)
-            {
-                case LangModels.ZhJp:
-                    _translationService = new YoudaoJapaneseTranslationService();
-                    _dictionaryService = null;
-
-                    menuLangModelZhJp.IsChecked = true;
-                    menuThemeColorWhite.Header = "亮白 白い";
-                    menuThemeColorLightGray.Header = "亮灰 薄いグレー";
-                    menuThemeColorDimGray.Header = "暗灰 暗いグレー";
-                    menuThemeColorBlack.Header = "暗黑 黒";
-                    menuExit.Header = "退出 终了";
-                    imgWriteNote.ToolTip = "记笔记 ノートをとる";
-                    imgReset.ToolTip = "清空输入框 空入力";
-                    break;
-                case LangModels.ZhEn:
-                default:
-                    _translationService = new YoudaoEnglishTranslationService();
-                    _dictionaryService = new YoudaoEnglishDictionaryService();
-
-                    menuLangModelZhEn.IsChecked = true;
-                    menuThemeColorWhite.Header = "亮白 White";
-                    menuThemeColorLightGray.Header = "亮灰 LightGray";
-                    menuThemeColorDimGray.Header = "暗灰 DimGray";
-                    menuThemeColorBlack.Header = "暗黑 Black";
-                    menuExit.Header = "退出 Exit";
-                    imgWriteNote.ToolTip = "记笔记 WriteNote";
-                    imgReset.ToolTip = "清空输入框 ClearInput";
-                    break;
-            }
-
-            ResetTypingTimer();
-        }
-    }
-
     public MainWindow()
     {
-        _typingTimer = new DispatcherTimer
+        _gridMainHiddenTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(800)
+            Interval = TimeSpan.FromSeconds(3)
         };
-        _typingTimer.Tick += new EventHandler(HandleTypingTimerTimeoutAsync!);
+        _gridMainHiddenTimer.Tick += new EventHandler((_, _) =>
+        {
+            if (!_isExit && gridMain != null)
+            {
+                // 隐藏输入框与按钮
+                gridMain.Visibility = Visibility.Hidden;
+                // 隐藏右下角三角标
+                ResizeMode = ResizeMode.NoResize;
+            }
+        });
 
         InitializeComponent();
 
         LoadSettingsAndInitializeServices();
+
+        txtInput.Text = "可在此处输入笔记 / 按 Ctrl+Q 快捷键切换不透明度 / 右击悬浮窗边缘可打开菜单";
+        gridNoteWrote.Visibility = Visibility.Hidden;
+        gridWriteNote.Visibility = Visibility.Hidden;
+        gridReset.Visibility = Visibility.Hidden;
     }
 
     /// <summary>
@@ -231,6 +177,35 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// 窗体
+    /// 鼠标进入
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Window_MouseEnter(object sender, MouseEventArgs e)
+    {
+        _gridMainHiddenTimer.Stop();
+        // 显示输入框与按钮
+        gridMain.Visibility = Visibility.Visible;
+        // 显示右下角三角标
+        ResizeMode = ResizeMode.CanResizeWithGrip;
+    }
+
+    /// <summary>
+    /// 窗体
+    /// 鼠标离开
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Window_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (gridReset.Visibility == Visibility.Hidden)
+        {
+            _gridMainHiddenTimer.Start();
+        }
+    }
+
+    /// <summary>
+    /// 窗体
     /// 鼠标单击
     /// </summary>
     /// <param name="sender"></param>
@@ -257,9 +232,8 @@ public partial class MainWindow : Window
     /// <param name="e"></param>
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        imgWriteNote.Visibility = Visibility.Hidden;
-        imgReset.Visibility = Visibility.Hidden;
-        imgLoading.Visibility = Visibility.Visible;
+        gridWriteNote.Visibility = Visibility.Hidden;
+        gridReset.Visibility = Visibility.Hidden;
 
         SaveCurrentSettings();
 
@@ -269,7 +243,6 @@ public partial class MainWindow : Window
     /// <summary>
     /// 加载配置并初始化服务
     /// </summary>
-    [MemberNotNull(nameof(_translationService))]
     [MemberNotNull(nameof(_noteService))]
     private void LoadSettingsAndInitializeServices()
     {
@@ -281,9 +254,6 @@ public partial class MainWindow : Window
             Top = restoreBounds.Top;
             Width = restoreBounds.Width;
             Height = restoreBounds.Height;
-
-            // 此处将初始化 _translationService 与 _dictionaryService
-            LangModel = Properties.Settings.Default.LangModel;
             ThemeColor = Properties.Settings.Default.ThemeColor;
         }
         catch
@@ -291,9 +261,6 @@ public partial class MainWindow : Window
             Width = WINDOW_DEFAULT_WIDTH;
             Height = WINDOW_DEFAULT_HEIGHT;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            // 此处将初始化 _translationService 与 _dictionaryService
-            LangModel = LangModels.ZhEn;
             ThemeColor = ThemeColors.Black;
         }
 
@@ -308,7 +275,6 @@ public partial class MainWindow : Window
         // 保存当前位置、大小和状态到配置文件
         Properties.Settings.Default.MainWindowsRect = RestoreBounds;
         Properties.Settings.Default.ThemeColor = ThemeColor;
-        Properties.Settings.Default.LangModel = LangModel;
         Properties.Settings.Default.Save();
     }
 
@@ -319,12 +285,11 @@ public partial class MainWindow : Window
     /// <param name="foreground"></param>
     private void SetWindowColor(Brush background, Brush foreground)
     {
-        Background = txtInput.Background = txtResult.Background = background;
-        txtInput.Foreground = txtResult.Foreground = foreground;
-        imgLoading.Foreground = imgReset.Foreground = imgWriteNote.Foreground = imgNoteWrote.Foreground = imgEye.Foreground = imgClose.Foreground = foreground;
+        Background = txtInput.Background = background;
+        txtInput.Foreground = foreground;
+        imgEye.Foreground = imgReset.Foreground = labReset.Foreground = imgWriteNote.Foreground = labWriteNote.Foreground = imgClose.Foreground = foreground;
     }
 
-    #region ImgButton 按钮
     /// <summary>
     /// 重置按钮
     /// 鼠标单击
@@ -333,10 +298,8 @@ public partial class MainWindow : Window
     /// <param name="e"></param>
     private void ImgReset_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        _typingTimer.Stop();
         txtInput.Text = string.Empty;
-        txtResult.Text = string.Empty;
-        imgReset.Visibility = Visibility.Visible;
+        gridReset.Visibility = Visibility.Hidden;
     }
 
     /// <summary>
@@ -383,22 +346,20 @@ public partial class MainWindow : Window
     {
         try
         {
-            imgWriteNote.Visibility = Visibility.Hidden;
-            imgNoteWrote.Visibility = Visibility.Visible;
+            gridWriteNote.Visibility = Visibility.Hidden;
+            gridNoteWrote.Visibility = Visibility.Visible;
 
-            await _noteService.WriteAsync(txtInput.Text, txtResult.Text);
+            await _noteService.WriteAsync(txtInput.Text);
         }
         catch
         {
-            imgWriteNote.Visibility = Visibility.Visible;
-            imgNoteWrote.Visibility = Visibility.Hidden;
+            gridWriteNote.Visibility = Visibility.Visible;
+            gridNoteWrote.Visibility = Visibility.Hidden;
 
             txtInput.Text = "笔记记录失败，可能是因为文件被占用或没有写入文件的权限。如果您已打开笔记文件，请将其关闭后再记录笔记；如果依然无法记录笔记，请尝试使用系统管理员权限启动本应用。";
         }
     }
-    #endregion ImgButton 按钮
 
-    #region ContextMenu 右键菜单
     /// <summary>
     /// 右键菜单
     /// 退出
@@ -409,28 +370,6 @@ public partial class MainWindow : Window
     {
         _isExit = true;
         Application.Current.Shutdown();
-    }
-
-    /// <summary>
-    /// 右键菜单
-    /// 中文←→English
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void MenuLangModelZhEn_Click(object sender, RoutedEventArgs e)
-    {
-        LangModel = LangModels.ZhEn;
-    }
-
-    /// <summary>
-    /// 右键菜单
-    /// 中文←→日本語
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void MenuLangModelZhJp_Click(object sender, RoutedEventArgs e)
-    {
-        LangModel = LangModels.ZhJp;
     }
 
     /// <summary>
@@ -476,9 +415,7 @@ public partial class MainWindow : Window
     {
         ThemeColor = ThemeColors.Black;
     }
-    #endregion ContextMenu 右键菜单
 
-    #region CommandBinding 快捷键
     /// <summary>
     /// 快捷键
     /// 切换窗体不透明度
@@ -489,17 +426,6 @@ public partial class MainWindow : Window
     {
         Opacity = Opacity == 1 ? WINDOW_MINIUMU_OPACITY : 1;
     }
-    #endregion CommandBinding 快捷键
-
-    #region TypingEvent & Timer 输入事件与计时器
-    /// <summary>
-    /// 重置结束输入后的计时器，计时器倒计时结束后将执行<see cref="HandleTypingTimerTimeoutAsync"/>
-    /// </summary>
-    private void ResetTypingTimer()
-    {
-        _typingTimer.Stop();
-        _typingTimer.Start();
-    }
 
     /// <summary>
     /// 文本输入框
@@ -509,59 +435,17 @@ public partial class MainWindow : Window
     /// <param name="e"></param>
     private void TxtInput_TextChanged(object sender, TextChangedEventArgs e)
     {
-        ResetTypingTimer();
-    }
+        gridNoteWrote.Visibility = Visibility.Hidden;
 
-    /// <summary>
-    /// <see cref="_typingTimer"/>倒计时结束后执行该方法，对输入内容进行翻译
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void HandleTypingTimerTimeoutAsync(object sender, EventArgs e)
-    {
-        imgWriteNote.Visibility = Visibility.Hidden;
-        imgNoteWrote.Visibility = Visibility.Hidden;
-        imgReset.Visibility = Visibility.Hidden;
-        imgLoading.Visibility = Visibility.Visible;
-
-        var timer = sender as DispatcherTimer;
-        if (timer != null)
+        if (string.IsNullOrWhiteSpace(txtInput.Text))
         {
-            // The timer must be stopped, We want to act only once per keystroke.
-            timer.Stop();
-            bool isFinish = false;
-            if (string.IsNullOrWhiteSpace(txtInput.Text)) // Empty
-            {
-                txtResult.Text = string.Empty;
-                isFinish = true;
-            }
-
-            if (!isFinish && _dictionaryService != null) // 查单词
-            {
-                if (txtInput.Text.IsSingleEnglishWord()) // 目前只有英文单词支持查单词
-                {
-                    var result = await _dictionaryService.QueryAsync(txtInput.Text);
-                    if (string.IsNullOrEmpty(result))
-                    {
-                        result = await _translationService.TranslateAsync(txtInput.Text);
-                    }
-                    txtResult.Text = result;
-                    isFinish = true;
-                }
-            }
-
-            if (!isFinish) // 翻译句子
-            {
-                txtResult.Text = await _translationService.TranslateAsync(txtInput.Text);
-            }
+            gridWriteNote.Visibility = Visibility.Hidden;
+            gridReset.Visibility = Visibility.Hidden;
         }
-
-        imgLoading.Visibility = Visibility.Hidden;
-        if (!string.IsNullOrWhiteSpace(txtInput.Text))
+        else
         {
-            imgWriteNote.Visibility = Visibility.Visible;
-            imgReset.Visibility = Visibility.Visible;
+            gridWriteNote.Visibility = Visibility.Visible;
+            gridReset.Visibility = Visibility.Visible;
         }
     }
-    #endregion TypingEvent & Timer 输入事件与计时器
 }

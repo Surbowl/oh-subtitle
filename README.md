@@ -1,18 +1,19 @@
 # Oh-Subtitle
 <img src="https://github.com/Surbowl/Oh-Subtitle/blob/master/images/icon.png?raw=true" width="50" />
-看剧学英语时没有合适的工具遮挡字幕？试试这款简洁的小程序，轻松遮盖字幕，还能查单词 (＾Ｕ＾)ノ
+看剧学英语时没有合适的工具遮挡字幕？试试这款简洁的小程序，轻松遮盖字幕，还能记笔记 (＾Ｕ＾)ノ
 
 ## Features
 - 可随意拖拽改变遮罩范围
-- 支持英语单词查询与长句翻译
-- 支持日语长句翻译（实验性功能）
-- 可保存查询历史，导出为 CSV 文件
+- 快捷记录笔记
 - 四种主题颜色可选
 - 支持半透明窗体，可通过快捷键切换
 
-更多信息可浏览文章[《分享一款带翻译功能的挡字幕小工具，方便看剧学英语、日语》](https://zhuanlan.zhihu.com/p/256343803)
+更多信息可浏览知乎上的[介绍文章](https://zhuanlan.zhihu.com/p/256343803)
 
 ## Releases
+- [v1.2.0](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.2.0)
+  - 因版权原因，移除翻译与字典功能
+  - 鼠标离开悬浮窗后，自动隐藏所有操作按钮
 - [v1.1.3](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.3)
   - 由于 google.cn 停止服务，替换翻译 API，解决中国大陆地区不能翻译的问题
   - CSV 笔记本模块优化，支持英文逗号与双引号

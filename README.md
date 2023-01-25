@@ -12,7 +12,8 @@
 
 ## Releases
 - [v1.2.0](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.2.0)
-  - 因版权原因，移除翻译与字典功能
+  - **因版权原因，移除翻译与字典功能**
+  - 调整按钮布局
   - 鼠标离开悬浮窗后，自动隐藏所有操作按钮
 - [v1.1.3](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.3)
   - 由于 google.cn 停止服务，替换翻译 API，解决中国大陆地区不能翻译的问题

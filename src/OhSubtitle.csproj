@@ -24,7 +24,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 	</ItemGroup>
 

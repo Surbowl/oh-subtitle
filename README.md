@@ -1,6 +1,6 @@
 # Oh-Subtitle
 <img src="https://github.com/Surbowl/Oh-Subtitle/blob/master/images/icon.png?raw=true" width="50" />
-看剧学英语时没有合适的工具遮挡字幕？试试这款简洁的小程序，轻松遮盖字幕，还能记笔记 (＾Ｕ＾)ノ
+看剧学外语时没有合适的工具遮挡字幕？试试这款简洁的小程序，轻松遮盖字幕，还能记笔记 (＾Ｕ＾)ノ
 
 ## Features
 - 可随意拖拽改变遮罩范围
@@ -12,7 +12,7 @@
 
 ## Releases
 - [v1.2.0](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.2.0)
-  - **因版权原因，移除翻译与字典功能**
+  - **移除翻译与字典功能**
   - 调整按钮布局
   - 鼠标离开悬浮窗后，自动隐藏所有操作按钮
 - [v1.1.3](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.1.3)

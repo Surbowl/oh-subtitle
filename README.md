@@ -10,6 +10,11 @@
 
 更多信息可浏览知乎上的[介绍文章](https://zhuanlan.zhihu.com/p/256343803)
 
+## 安装包
+下载链接：[百度网盘](https://pan.baidu.com/share/init?surl=upPT-eCSczfRLKlIoZF-Jg)
+提码：ydu7
+（如果链接失效请提交 Issues）
+
 ## Releases
 - [v1.2.0](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.2.0)
   - **移除翻译与字典功能**
@@ -40,7 +45,6 @@
 - [v1.0.2](https://github.com/Surbowl/oh-subtitle/releases/tag/v1.0.2)
   - 新增透明度切换按钮（眼睛按钮），鼠标悬浮在按钮上方可使窗体透明化
   - 降低窗体默认高度 80 -> 65
-
 
 ## Demonstration
 关于本应用请浏览知乎文章[《分享一款带翻译功能的挡字幕小工具，方便看剧学英语、日语》](https://zhuanlan.zhihu.com/p/256343803)

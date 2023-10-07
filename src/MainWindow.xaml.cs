@@ -106,7 +106,7 @@ public partial class MainWindow : Window
     {
         _gridMainHiddenTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(3)
+            Interval = TimeSpan.FromSeconds(1)
         };
         _gridMainHiddenTimer.Tick += new EventHandler((_, _) =>
         {
